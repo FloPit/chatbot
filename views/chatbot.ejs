@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <% include Template/style.ejs %>
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+  <div class="container">
+  <% include Template/header.ejs %>
+  
+    <h1 style="color:gray"><%= title %></h1>
+  <!--
+  <form action="/chatnow" method="post">
+  </form>
+  -->
+     <div class="chatbot">
+                        <div class = "anaBanner"><p style="color:gray">Fragen? Anna kann Ihnen helfen.<p></div>
+                        <div id="chatBox" class="dialogcontainer"></div>
+                        <input type = text id="chatMessage" class="dialoginput" placeholder="Ihre Nachricht" ></input>
+                    </div>
+                    </div>
+    <script>   
+    
+      "use strict";
+      var session = '<%=session1%>';
+      
+      
+
+document.getElementById("chatMessage")
+    .addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.keyCode == 13) {
+        newMessage();
+        document.getElementById("chatMessage").value = "";
+    }
+});
+
+      var connection=false;
+     
+      var socket = io('//'+document.location.hostname+':'+document.location.port);
+      //var socket = io('//'+document.location.hostname);
+        socket.on('start', function(data) {
+        console.log(data);
+        connection=true;     
+    });
+
+    socket.on('response', function(data){
+        console.log(data);
+        displayMessage(data,"watson");
+    })
+
+    socket.on('disconnect', function () {
+        connection=false;
+    console.log("Socket disconnected.")});
+
+    socket.emit("message", "", session);
+
+
+function newMessage(){
+        var usrInput = document.getElementById('chatMessage').value;
+        console.log(usrInput);
+
+if (usrInput!=null && connection==true){
+    socket.emit('message', usrInput,session);
+displayMessage(usrInput, "user");
+console.log(session);
+}};
+
+
+
+function displayMessage(text, customer) {
+
+    var user = customer;
+    var chat = document.getElementById('chatBox');
+    var bubble = document.createElement('div');
+    bubble.className = 'message'; // Wrap the text first in a message class for common formatting
+
+    // Set chat bubble color and position based on the user parameter
+    if (user === "watson") {
+      var name = "Anna";
+      bubble.innerHTML = "<div class='anaTitle'>" + name   + "</div><div class='ana'>" + text + "</div>";
+    } else {
+        var name = "Customer";
+     //   if(context && context.fname && context.fname.length > 0){
+       //   name = context.fname;
+       // }
+        bubble.innerHTML = "<div class='userTitle'>" + name   + "</div><div class='user'>" + text + "</div>";
+    }
+
+    chat.appendChild(bubble);
+    chat.scrollTop = chat.scrollHeight; // Move chat down to the last message displayed
+    document.getElementById('chatMessage').focus();
+}
+
+function getTimestamp(){
+    var currentTime = new Date();
+    currentTime
+    return currentTime;
+}
+
+
+/*
+$("#submitmsg").click(function(){	
+		var clientmsg = $("#usermsg").val();
+		$.post("post.php", {text: clientmsg});				
+		$("#usermsg").attr("value", "");
+		return false;
+	});
+
+    function displayMessage(text, user) {
+
+    var chat = document.getElementById('chatBox');
+    var bubble = document.createElement('div');
+    bubble.className = 'message'; // Wrap the text first in a message class for common formatting
+
+    // Set chat bubble color and position based on the user parameter
+    if (user === watson) {
+      var name = "Ana";
+      bubble.innerHTML = "<div class='anaTitle'>" + name + " | " + getTimestamp() + "</div><div class='ana'>" + text + "</div>";
+    } else {
+        var name = "John";
+        if(context && context.fname && context.fname.length > 0){
+          name = context.fname;
+        }
+        bubble.innerHTML = "<div class='userTitle'>" + name + " | " + getTimestamp() + "</div><div class='user'>" + text + "</div>";
+    }
+
+    chat.appendChild(bubble);
+    chat.scrollTop = chat.scrollHeight; // Move chat down to the last message displayed
+    document.getElementById('chatMessage').focus();
+}
+
+
+  
+
+// Variables for chat and stored context specific events
+var params = {}; // Object for parameters sent to the Watson Conversation service
+var watson = 'Ana';
+var user = '';
+var text = '';
+var context;
+
+/**
+ * @summary Enter Keyboard Event.
+ *
+ * When a user presses enter in the chat input window it triggers the service interactions.
+ *
+ * @function newEvent
+ * @param {Object} e - Information about the keyboard event.
+ 
+function newEvent(e) {
+    // Only check for a return/enter press - Event 13
+    if (e.which === 13 || e.keyCode === 13) {
+        console.log("wieso??")
+
+        var userInput = document.getElementById('chatMessage');
+        text = userInput.value; // Using text as a recurring variable through functions
+        text = text.replace(/(\r\n|\n|\r)/gm, ""); // Remove erroneous characters
+
+        // If there is any input then check if this is a claim step
+        // Some claim steps are handled in newEvent and others are handled in userMessage
+        if (text) {
+
+            // Display the user's text in the chat box and null out input box
+            displayMessage(text, user);
+            userInput.value = '';
+
+            userMessage(text);
+
+        } else {
+
+            // Blank user message. Do nothing.
+            console.error("No message.");
+            userInput.value = '';
+
+            return false;
+        }
+    }
+}
+*/
+    </script>
+  </body>
+</html>
+
+
+  

@@ -1,0 +1,82 @@
+app.post('/api/ana', function(req, res) {
+
+    // ensure user policies are loaded
+    if (!req.body.context || !req.body.context.system) {
+        getUserPolicy(req, function(err, doc) {
+            if (err) {
+                res.status(err.code || 500).json(err);
+            } else {
+                processChatMessage(req, res);
+            }
+        });
+    } else {
+        processChatMessage(req, res);
+    }
+}); // End app.post 'api/ana'
+
+function processChatMessage(req, res) {
+    chatbot.sendMessage(req, function(err, data) {
+        if (err) {
+            console.log("Error in sending message: ", err);
+            res.status(err.code || 500).json(err);
+        } else {
+
+            Logs.find({selector: {
+                'conversation': data.context.conversation_id
+            }}, function(err, result) {
+                if (err) {
+                    console.log("Cannot find log for conversation id of ", data.context.conversation_id);
+                } else if(result.docs.length > 0) {
+                    var doc = result.docs[0];
+                    console.log("Sending log updates to dashboard");
+                    //console.log("doc: ", doc);
+                    io.sockets.emit('logDoc', doc);
+                } else {
+                    console.log("No log file found.");
+                }
+            });
+
+            var context = data.context;
+            var amount = context.claim_amount;
+            var owner = req.user.username;
+
+            // File a claim for the user
+            if (context.claim_step === "verify") {
+                var claimFile = {
+                    date: null,
+                    benefit: null,
+                    provider: null,
+                    amount: null
+                };
+
+                claimFile.date = context.claim_date;
+                claimFile.benefit = context.claim_procedure;
+                claimFile.provider = context.claim_provider;
+                claimFile.amount = context.claim_amount;
+
+                console.log("Filing data: " + owner + " claimFile: " + JSON.stringify(claimFile));
+
+                fileClaim(owner, claimFile, function(err, reply) {
+
+                    data.output.text = '';
+                    data.context.claim_step = '';
+
+                    console.log("Reply for claim file: ", reply);
+
+                    if (reply && reply.outcome === 'success') {
+                        data.output.text = "Your " + context.claim_procedure + " claim for " + amount + " was successfully filed! " + reply.message;
+                        res.status(200).json(data);
+
+                    } else {
+                        res.status(500).json(err);
+                    }
+
+                });
+
+            } else {
+                res.status(200).json(data);
+            }
+        }
+    });
+}
+
