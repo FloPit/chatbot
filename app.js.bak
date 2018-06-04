@@ -206,8 +206,8 @@ function getContext(){
 
   if (chatSessionExists()==false){
     console.log("new Chat");
-    assistant.message({
-  workspace_id: '2580d4ac-afa9-4be6-9603-6805c2875ad8',
+    conversation.message({
+  workspace_id: '93d50004-ea4c-4d49-8d06-e4a8a1606f59',
   input: {'text': text},
  // context: context
 },  function(err, response) {
@@ -222,8 +222,8 @@ function getContext(){
 }else if(chatSessionExists()==true){
   let context = getContext();
  
-assistant.message({
-  workspace_id: '2580d4ac-afa9-4be6-9603-6805c2875ad8',
+conversation.message({
+  workspace_id: '93d50004-ea4c-4d49-8d06-e4a8a1606f59',
   input: {'text': text},
   context: context
 },  function(err, response) {
