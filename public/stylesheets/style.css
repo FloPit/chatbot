@@ -6,7 +6,7 @@ body {
 
 padding-top:2%;
   margin: 0;
-    background: url('/images/vulkuanstrasse.jpg') no-repeat center center fixed;
+    background: url('/images/swisscom_logo.jpg') no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -78,7 +78,7 @@ td, th {
 .anaBanner {
   height: 48px;
   line-height: 48px;
-  background-color: rgb(224, 120, 198);
+  background-color: rgb(28, 36, 143);
   vertical-align: middle;
   padding-left: 15px;
   color: white;
