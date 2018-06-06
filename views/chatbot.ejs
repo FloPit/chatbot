@@ -15,7 +15,7 @@
   </form>
   -->
      <div class="chatbot">
-                        <div class = "anaBanner"><p style="color:gray">Fragen? Anna kann Ihnen helfen.<p></div>
+                        <div class = "anaBanner"><p style="color:gray">Fragen? Der Einkaufs-Chatbot kann Ihnen helfen.<p></div>
                         <div id="chatBox" class="dialogcontainer"></div>
                         <input type = text id="chatMessage" class="dialoginput" placeholder="Ihre Nachricht" ></input>
                     </div>
@@ -78,7 +78,7 @@ function displayMessage(text, customer) {
 
     // Set chat bubble color and position based on the user parameter
     if (user === "watson") {
-      var name = "Anna";
+      var name = "Swisscom-Chatbot";
       bubble.innerHTML = "<div class='anaTitle'>" + name   + "</div><div class='ana'>" + text + "</div>";
     } else {
         var name = "Customer";
