@@ -80,18 +80,23 @@ const conversation = watson.conversation({
 */
 
 //neue Verbindung
+//21.09.2018 fp: changed to new german cf einkauf org and space:
+//workspace needed in 3 places; also change the url!
+//was: 'https://gateway.watsonplatform.net/assistant/api'
+//found: https://gateway-fra.watsonplatform.net/assistant/api/v1/workspaces/250fc637-6da4-4946-a910-6f8efc5b8b8d/message/
+//new:   https://gateway-fra.watsonplatform.net/assistant/api
 
 var watson = require('watson-developer-cloud');
 
 var assistant = new watson.AssistantV1({
-  username: 'b3787e1c-1633-49f0-855b-3d4c02710d80',
-  password: 'LjsQHAGV6jw1',
+  username: '6e9459f9-000c-4c37-b9d0-f58a6fca3410',
+  password: 'BhSpDUOUuwm3',
   version: '2018-02-16',
-  url: 'https://gateway.watsonplatform.net/assistant/api'
+  url: 'https://gateway-fra.watsonplatform.net/assistant/api'
 });
 
 assistant.message({
-  workspace_id: '2580d4ac-afa9-4be6-9603-6805c2875ad8',
+  workspace_id: '250fc637-6da4-4946-a910-6f8efc5b8b8d',
   input: {'text': 'Hello'}
 },  function(err, response) {
   if (err)
@@ -207,7 +212,7 @@ function getContext(){
   if (chatSessionExists()==false){
     console.log("new Chat");
     assistant.message({
-  workspace_id: '2580d4ac-afa9-4be6-9603-6805c2875ad8',
+  workspace_id: '250fc637-6da4-4946-a910-6f8efc5b8b8d',
   input: {'text': text},
  // context: context
 },  function(err, response) {
@@ -223,7 +228,7 @@ function getContext(){
   let context = getContext();
  
 assistant.message({
-  workspace_id: '2580d4ac-afa9-4be6-9603-6805c2875ad8',
+  workspace_id: '250fc637-6da4-4946-a910-6f8efc5b8b8d',
   input: {'text': text},
   context: context
 },  function(err, response) {
